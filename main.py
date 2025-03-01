@@ -22,7 +22,8 @@ def generate_new_weights():
     batch_size = 10
     num_iterations = 100000
 
-    weights = train(X_train, y_train, num_classes, learning_rate, batch_size, num_iterations)
+    weights = train(train_data, X_train, y_train, X_test, y_test, num_classes, learning_rate,
+                    batch_size, num_iterations)
 
     # Test model on test data and compute accuracy.
     accuracy = test(X_test, y_test, weights)
@@ -41,7 +42,7 @@ def one_hot_encode(y, num_classes):
     # so the end result is that it returns the rows 1, 5, 0, 4, 3.
     # that means that it returns [0, 1, 0, 0, 0, 0, 0, 0, 0, 0] and [0, 0, 0, 0, 0, 1, 0, 0, 0, 0] and etc, correctly one hot encoding the stuff.
 
-def train(X_train, y_train, num_classes, learning_rate, batch_size, num_iterations):
+def train(train_data, X_train, y_train, X_test, y_test, num_classes, learning_rate, batch_size, num_iterations):
     weights = np.random.randn(X_train.shape[1], num_classes) # X_train.shape[1] is taking the width of the X_train data array (784) in order to initialize a (784, 10) matrix of random 0-1 weights to be used in the model
     losses = [] # These arrays are for the graph
     accuracies = []
@@ -56,8 +57,8 @@ def train(X_train, y_train, num_classes, learning_rate, batch_size, num_iteratio
         y_pred = sigmoid(z)
 
         # Compute the loss by comparing the predicted output with the true output
-        y_true = one_hot_encode(y_batch, num_classes)  # converts the batch targets into a one_hot_encode matrix based on the function we created above
-        loss = ((y_pred - y_true) ** 2).mean()  # calculates the element-wise square difference between y_true (0 or 1) and y_pred (some random decimal number) and finds the average of them all, saves to loss
+        y_true = one_hot_encode(y_batch, num_classes) # converts the batch targets into a one_hot_encode matrix based on the function we created above
+        loss = ((y_pred - y_true) ** 2).mean() # calculates the element-wise square difference between y_true (0 or 1) and y_pred (some random decimal number) and finds the average of them all, saves to loss
 
         # Compute the error between the true and predicted output
         error = y_pred - y_true # First compute the error between the true and predicted output by subtracting y_pred from y_true. This gives us a matrix of shape (batch_size, 10) where each element represents the difference between the predicted and true outputs for a particular sample and class.
@@ -102,33 +103,32 @@ def test(X_test, y_test, weights):
     z = np.dot(X_test, weights) # z is a (10000, 10) matrix of the input 10000 test samples and their classes predicted (pre-sigmoid)
     y_pred = sigmoid(z) # Apply the sigmoid function to obtain the predicted output
     # Compute the predicted class by taking the argmax of y_pred along axis 1 of the (10000, 10) matrix
-    predictions = np.argmax(y_pred, axis=1) # Axis = 1 collapses the columns and returns the index of the max element of each row
+    predictions = np.argmax(y_pred, axis = 1) # Axis = 1 collapses the columns and returns the index of the max element of each row
     # Compute the accuracy by comparing predictions with true labels - element-wise comparison with True/False for each and average the equal comparisons
     accuracy = (predictions == y_test).mean()
     return accuracy
 
 def save_weights(weights):
     # Create the directory if it doesn't exist
-    os.makedirs('previous_generated_weights', exist_ok=True)
-    
+    os.makedirs('previous_generated_weights', exist_ok = True)
+
     # Generate a unique filename based on current timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f'previous_generated_weights/weights_{timestamp}.npy'
-    
+
     # Save the weights
     np.save(filename, weights)
     print(f"Weights saved to {filename}")
 
 def test_with_saved_weights(weights_path, dataset_path):
-
     # Load the weights
     loaded_weights = np.load(weights_path)
-    
+
     # Load the dataset
-    data = pd.read_csv(dataset_path, header=None)
+    data = pd.read_csv(dataset_path, header = None)
     X = data.iloc[:, 1:].values / 255.0
     y = data.iloc[:, 0].values
-    
+
     # Run test for accuracy, print.
     accuracy = test(X, y, loaded_weights)
     print(f'Test accuracy using weights from {weights_path} on dataset {dataset_path}: {accuracy}')
