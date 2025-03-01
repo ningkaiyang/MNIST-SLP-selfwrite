@@ -135,4 +135,5 @@ def test_with_saved_weights(weights_path, dataset_path):
 
 if __name__ == "__main__":
     generate_new_weights()
-    # test_with_saved_weights('previous_generated_weights/weights_20250228_164241.npy', 'training_data/mnist_test.csv')
+    print("Accuracy of the best model yet:\n\n\n\n\n")
+    test_with_saved_weights('previous_generated_weights/weights_20250228_172113.npy', 'training_data/mnist_test.csv')
