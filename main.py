@@ -1,14 +1,16 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from datetime import datetime
+import os
 
-# Load MNIST training data from pandas DataFrame
-train_data = pd.read_csv('data/mnist_train_small.csv', header=None)
+# Load MNIST training training_data from pandas DataFrame
+train_data = pd.read_csv('training_data/mnist_train_small.csv', header=None)
 X_train = train_data.iloc[:, 1:].values / 255.0     # regularlize the x-data that goes from 0-255 to a decimal from 0-1
 y_train = train_data.iloc[:, 0].values  # .values converts them to numPy values
 
-# Load MNIST test data from pandas DataFrame
-test_data = pd.read_csv('data/mnist_test.csv', header=None)
+# Load MNIST test training_data from pandas DataFrame
+test_data = pd.read_csv('training_data/mnist_test.csv', header=None)
 X_test = test_data.iloc[:, 1:].values / 255.0    # regularlize the x-data that goes from 0-255 to a decimal from 0-1
 y_test = test_data.iloc[:, 0].values  # .values converts them to numPy values
 
@@ -74,6 +76,9 @@ def train(X_train, y_train, num_classes, learning_rate, batch_size, num_iteratio
 
     plt.show()
 
+    # Save the trained weights
+    save_weights(weights)
+
     # Return the trained weights when done, so the final test function can run
     return weights
 
@@ -87,6 +92,18 @@ def test(X_test, y_test, weights):
     # Compute the accuracy by comparing predictions with true labels
     accuracy = (predictions == y_test).mean()
     return accuracy
+
+def save_weights(weights):
+    # Create the directory if it doesn't exist
+    os.makedirs('previous_generated_weights', exist_ok=True)
+    
+    # Generate a unique filename based on current timestamp
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f'previous_generated_weights/weights_{timestamp}.npy'
+    
+    # Save the weights
+    np.save(filename, weights)
+    print(f"Weights saved to {filename}")
 
 num_classes = 10
 learning_rate = 1
