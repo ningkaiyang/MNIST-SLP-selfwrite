@@ -4,15 +4,29 @@ import numpy as np
 from datetime import datetime
 import os
 
-# Load MNIST training training_data from pandas DataFrame
-train_data = pd.read_csv('training_data/mnist_train_small.csv', header=None)
-X_train = train_data.iloc[:, 1:].values / 255.0     # regularlize the x-data that goes from 0-255 to a decimal from 0-1
-y_train = train_data.iloc[:, 0].values  # .values converts them to numPy values
+def generate_new_weights():
+    # Load MNIST training training_data from pandas DataFrame
+    train_data = pd.read_csv('training_data/mnist_train_small.csv', header = None)
+    X_train = train_data.iloc[:,
+              1:].values / 255.0  # regularize the x-data that goes from 0-255 to a decimal from 0-1
+    y_train = train_data.iloc[:, 0].values  # .values converts them to numPy values
 
-# Load MNIST test training_data from pandas DataFrame
-test_data = pd.read_csv('training_data/mnist_test.csv', header=None)
-X_test = test_data.iloc[:, 1:].values / 255.0    # regularlize the x-data that goes from 0-255 to a decimal from 0-1
-y_test = test_data.iloc[:, 0].values  # .values converts them to numPy values
+    # Load MNIST test training_data from pandas DataFrame
+    test_data = pd.read_csv('training_data/mnist_test.csv', header = None)
+    X_test = test_data.iloc[:,
+             1:].values / 255.0  # regularize the x-data that goes from 0-255 to a decimal from 0-1
+    y_test = test_data.iloc[:, 0].values  # .values converts them to numPy values
+
+    num_classes = 10
+    learning_rate = 1
+    batch_size = 10
+    num_iterations = 100000
+
+    weights = train(X_train, y_train, num_classes, learning_rate, batch_size, num_iterations)
+
+    # Test model on test data and compute accuracy.
+    accuracy = test(X_test, y_test, weights)
+    print(f'Test accuracy: {accuracy}')
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
@@ -105,18 +119,8 @@ def save_weights(weights):
     np.save(filename, weights)
     print(f"Weights saved to {filename}")
 
-num_classes = 10
-learning_rate = 1
-batch_size = 10
-num_iterations = 100000
-
-weights = train(X_train, y_train, num_classes, learning_rate, batch_size, num_iterations)
-
-# Test model on test data and compute accuracy.
-accuracy = test(X_test, y_test, weights)
-print(f'Test accuracy: {accuracy}')
-
 def test_with_saved_weights(weights_path, dataset_path):
+
     # Load the weights
     loaded_weights = np.load(weights_path)
     
@@ -125,9 +129,10 @@ def test_with_saved_weights(weights_path, dataset_path):
     X = data.iloc[:, 1:].values / 255.0
     y = data.iloc[:, 0].values
     
-    # Run the test
+    # Run test for accuracy, print.
     accuracy = test(X, y, loaded_weights)
     print(f'Test accuracy using weights from {weights_path} on dataset {dataset_path}: {accuracy}')
 
-# Example usage (commented out):
-# test_with_saved_weights('previous_generated_weights/weights_20250228_164241.npy', 'training_data/mnist_test.csv')
+if __name__ == "__main__":
+    generate_new_weights()
+    # test_with_saved_weights('previous_generated_weights/weights_20250228_164241.npy', 'training_data/mnist_test.csv')
