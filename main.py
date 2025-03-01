@@ -89,7 +89,7 @@ def test(X_test, y_test, weights):
     y_pred = sigmoid(z) # Apply the sigmoid function to obtain the predicted output
     # Compute the predicted class by taking the argmax of y_pred along axis 1 of the (10000, 10) matrix
     predictions = np.argmax(y_pred, axis=1) # Axis = 1 collapses the columns and returns the index of the max element of each row
-    # Compute the accuracy by comparing predictions with true labels
+    # Compute the accuracy by comparing predictions with true labels - element-wise comparison with True/False for each and average the equal comparisons
     accuracy = (predictions == y_test).mean()
     return accuracy
 
@@ -115,3 +115,19 @@ weights = train(X_train, y_train, num_classes, learning_rate, batch_size, num_it
 # Test model on test data and compute accuracy.
 accuracy = test(X_test, y_test, weights)
 print(f'Test accuracy: {accuracy}')
+
+def test_with_saved_weights(weights_path, dataset_path):
+    # Load the weights
+    loaded_weights = np.load(weights_path)
+    
+    # Load the dataset
+    data = pd.read_csv(dataset_path, header=None)
+    X = data.iloc[:, 1:].values / 255.0
+    y = data.iloc[:, 0].values
+    
+    # Run the test
+    accuracy = test(X, y, loaded_weights)
+    print(f'Test accuracy using weights from {weights_path} on dataset {dataset_path}: {accuracy}')
+
+# Example usage (commented out):
+# test_with_saved_weights('previous_generated_weights/weights_20250228_164241.npy', 'training_data/mnist_test.csv')
