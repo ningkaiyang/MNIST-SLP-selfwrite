@@ -1,12 +1,12 @@
-# MNIST Single Layer Perceptron
+# MNIST Single Layer Neural Network
 
 ## Description
 
-This project, created on July 21, 2023 while I was attending COSMOS (California State Summer School For Mathematics and Science) at UC Davis to study Machine Learning, is an implementation of a neural network machine learning model from scratch. It specifically focuses on creating a Single Layer Perceptron (SLP) for the MNIST handwritten digits dataset using only NumPy and Pandas for data manipulation. The core of this project lies in the matrix-based mathematical derivation of the SLP. I wished to challenge myself and uncover a little bit of the "black box" of machine learning by taking a fundamental approach to neural network construction without relying on high-level machine learning libraries.
+This project, created on July 21, 2023 while I was attending COSMOS (California State Summer School For Mathematics and Science) at UC Davis to study Machine Learning, is an implementation of a neural network machine learning model from scratch. It specifically focuses on creating a Single Layer Neural Network for the MNIST handwritten digits dataset using only NumPy and Pandas for data manipulation. The core of this project lies in the matrix-based mathematical derivation of the SLP. I wished to challenge myself and uncover a little bit of the "black box" of machine learning by taking a fundamental approach to neural network construction without relying on high-level machine learning libraries.
 
 ## Features
 
-- Implementation of a Single Layer Perceptron using NumPy
+- Implementation of a Single Layer Neural Network using NumPy
 - Training on the MNIST dataset for handwritten digit recognition
 - Visualization of training loss and accuracy
 - Saving and loading of trained model weights
